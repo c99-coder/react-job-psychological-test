@@ -6,8 +6,8 @@ const Question = () => {
     return (
         <div>
             <h1>검사진행</h1>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar"
+            <div className="progress">
+                <div className="progress-bar" role="progressbar"
                     style={{ width: "25%" }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <Problems />
@@ -28,13 +28,13 @@ const Question = () => {
 
 const Problems = () => {
     return (
-        <div class="card text-center">
-            <div class="card-header">
+        <div className="card text-center">
+            <div className="card-header">
                 1번
             </div>
-            <div class="card-body">
-                <h5 class="card-title">첫번째문항</h5>
-                <p class="card-text">
+            <div className="card-body">
+                <h5 className="card-title">첫번째문항</h5>
+                <p className="card-text">
                     <button></button>
                 </p>
             </div>
