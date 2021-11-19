@@ -1,8 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import Question from "./components/Question";
-import Result from "./components/Result";
-import Start from "./components/Start";
-import QuestionEx from "./components/QuestionEx";
+import axios from 'axios';
 import {
   Route
 } from 'react-router-dom';
@@ -11,16 +8,21 @@ import React, {
   useEffect
 } from 'react'
 
-import axios from 'axios;'
+import Question from "./components/Question";
+import Result from "./components/Result";
+import Start from "./components/Start";
+import QuestionEx from "./components/QuestionEx";
 
 function App() {
   let [name, setName] = useState('')
   let [gender, setGender] = useState('')
   
+  let questions = []
   useEffect(() => {
-    axios.get('"www.career.go.kr/inspct/openapi/test/questions?apikey=fdedeadd7ba2b8dd6c1d7b7a1ea90489&q=6"')
+    axios.get("http://www.career.go.kr/inspct/openapi/test/questions?apikey=e772916f49d49980fd515f04c9ebc4ba&q=6")
       .then((response) => {
-        console.log(response)
+        console.log(response.data.RESULT)
+        questions.push(response.data.RESULT)
       })
     .catch((error) => {})
   },[])
