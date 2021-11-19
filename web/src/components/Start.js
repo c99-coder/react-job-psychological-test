@@ -17,7 +17,8 @@ const Start = (props) => {
                 className="form-check-input"
                 type="radio"
                 name="flexRadioDefault"
-                id="flexRadioDefault1" />
+                id="flexRadioDefault1"
+                required />
             <label
                 className="form-check-label"
                 htmlFor="flexRadioDefault1">
@@ -28,7 +29,8 @@ const Start = (props) => {
                 className="form-check-input"
                 type="radio"
                 name="flexRadioDefault"
-                id="flexRadioDefault1" />
+                id="flexRadioDefault1"
+                required />
             <label
                 className="form-check-label"
                 htmlFor="flexRadioDefault1">

@@ -15,11 +15,11 @@ const Question = () => {
                 <button
                 type="button"
                 className="btn btn-primary"
-                onClick={() => { history.push('/question') }}>이전</button>
+                    onClick={() => { history.goBack() }}>이전</button>
                 <button
                 type="button"
                 className="btn btn-primary"
-                onClick={() => { history.goBack() }}
+                    onClick={() => { history.push('/question') }}
                 >다음</button>
             </p>
         </div>
