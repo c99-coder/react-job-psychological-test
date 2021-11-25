@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from 'axios';
+
 import {
   Route
 } from 'react-router-dom';
@@ -12,22 +12,20 @@ import Result from "./components/Result";
 import Start from "./components/Start";
 import QuestionEx from "./components/QuestionEx";
 
+
 function App() {
   let [name, setName] = useState('')
   let [gender, setGender] = useState('')
-  
-  // axios.get("http://www.career.go.kr/inspct/openapi/test/questions?apikey=e772916f49d49980fd515f04c9ebc4ba&q=6")
-  //   .then((response) => {
-  //     console.log(response.data.RESULT)
-  //     questions.push(response.data.RESULT)
-  //   })
-  // .catch((error) => console.log(error))
-  
+  let [answerScores, setAnswerScores] = useState(new Array(28).fill(0))
+
   const genderHandler = (gender) => {
     setGender(gender)
   }
   const nameHandler = (e) => {
     setName(e.target.value)
+  }
+  const getAnswerScore = (answerScores2) => {
+    setAnswerScores(answerScores2)
   }
   return (
     <div>
@@ -43,10 +41,14 @@ function App() {
         <QuestionEx />
       </Route>
       <Route exact path="/question">
-        <Question />
+        <Question
+          getAnswerScore={getAnswerScore}/>
       </Route>
       <Route exact path="/result">
-        <Result />
+        <Result
+          answerScores={answerScores}
+          gender={gender}
+          name={name}/>
       </Route>
     </div>
   );

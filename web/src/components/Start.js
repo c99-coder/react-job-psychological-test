@@ -5,8 +5,7 @@ const Start = (props) => {
     let history = useHistory();
     return (
         <div>
-            <h1>직업심리검사</h1>
-
+            <h1>직업가치관검사</h1>
             <p><input
                 onChange={props.onName}
                 type="text"
