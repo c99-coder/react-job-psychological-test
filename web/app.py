@@ -21,7 +21,7 @@ def scores():
         cursor = db.cursor()
         cursor.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='score'")
         if cursor.fetchone()[0] == 1:
-            print('Table exist')
+            pass
         else:
             sql = """
                 CREATE TABLE "score" (
@@ -43,15 +43,13 @@ def scores():
                 resp.set_data(json.dumps(output))
                 return resp
         elif request.method == 'POST':
-            print("ok")
             form = request.get_json()
-            print(request)
             sql = "SELECT * FROM score WHERE name='%(name)s'" % {'name':form['name']}
             cursor.execute(sql)
             target=cursor.fetchall()
             if target:
                 sql = """
-                UPDATE score SET score=%(score)s""" % {'score':form['score']}
+                UPDATE score SET score=%(score)s where name='%(name)s'""" % {'name':form['name'], 'score':form['score']}
             else:
                 sql = """
                     INSERT INTO score (name, score) 
@@ -66,7 +64,7 @@ def scores():
             resp.set_data(output)
             return resp
     except Exception as e:
-        print('error', e)
+        pass
     finally:
         cursor.close()
         db.close()
@@ -76,4 +74,4 @@ def index():
     return resp
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=True, host='0.0.0.0')

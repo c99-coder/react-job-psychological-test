@@ -144,9 +144,19 @@ const Result = (props) => {
 				});
 				return temp;
 			});
-			fetch('/score')
-				.then((res) => res.json())
+			fetch(
+				'http://elice-kdt-3rd-vm-102.koreacentral.cloudapp.azure.com:5000/score',
+				{
+					method: 'GET',
+					mode: 'cors',
+				},
+			)
+				.then((res) => {
+					console.log(res);
+					return res.json();
+				})
 				.then((data) => {
+					console.log(data);
 					data.sort((a, b) => {
 						return b.score - a.score;
 					});
@@ -164,16 +174,20 @@ const Result = (props) => {
 		setScore(score);
 	};
 	const gameoverHandler = () => {
-		fetch('/score', {
-			method: 'POST',
-			body: JSON.stringify({
-				name: props.name === '' ? 'guest' : props.name,
-				score: score,
-			}),
-			headers: {
-				'Content-Type': 'application/json',
+		fetch(
+			'http://elice-kdt-3rd-vm-102.koreacentral.cloudapp.azure.com:5000/score',
+			{
+				method: 'POST',
+				mode: 'cors',
+				body: JSON.stringify({
+					name: props.name === '' ? 'guest' : props.name,
+					score: score,
+				}),
+				headers: {
+					'Content-Type': 'application/json',
+				},
 			},
-		});
+		);
 	};
 
 	const Rank = (props) => {
