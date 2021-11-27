@@ -194,73 +194,121 @@ const Result = (props) => {
 		await fetchGetRank();
 	};
 
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">분야</th>
+				<th scope="col">직업명</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th scope="row" style={{ minWidth: '80px' }}>
+					중졸이하
+				</th>
+				<td>{jobResult[1].join(' ')}</td>
+			</tr>
+			<tr>
+				<th scope="row">고졸</th>
+				<td>{jobResult[2].join(' ')}</td>
+			</tr>
+			<tr>
+				<th scope="row">전문대졸</th>
+				<td>{jobResult[3].join(' ')}</td>
+			</tr>
+			<tr>
+				<th scope="row">대졸</th>
+				<td>{jobResult[4].join(' ')}</td>
+			</tr>
+			<tr>
+				<th scope="row">대학원졸</th>
+				<td>{jobResult[5].join(' ')}</td>
+			</tr>
+		</tbody>
+	</table>;
+
 	const Rank = (props) => {
 		console.log(props.user);
 		return (
-			<>
-				{props.index === 1 && (
-					<p
-						onClick={() => {
-							setModalRanking(false);
-						}}
-					>
-						랭킹닫기(클릭)
-					</p>
-				)}
-				<ol>
-					{props.index}등 {props.user.name}님 {props.user.score}점
-				</ol>
-			</>
+			<tr>
+				<td>{props.index}등</td>
+				<td>{props.user.name}님</td>
+				<td>{props.user.score}점</td>
+			</tr>
 		);
 	};
 
 	if (!checkResult) {
 		return (
 			<div>
-				<h2>검사가 완료되었습니다.</h2>
-				직업생활과 관련하여 {props.name}님은{' '}
-				{questionInfo[result[0].num]}(와)과{' '}
-				{questionInfo[result[1].num]}(을)를 가장 중요하게 생각합니다.
+				<h2>검사가 완료됐습니다.</h2>
+				직업생활과 관련하여{' '}
+				<span className="fw-bold">{props.name}</span>
+				님은{' '}
+				<span className="fw-bold">{questionInfo[result[0].num]}</span>
+				(와)과{' '}
+				<span className="fw-bold">{questionInfo[result[1].num]}</span>
+				(을)를 가장 중요하게 생각합니다.
 				<br />
-				반면에 {questionInfo[result[result.length - 1].num]},{' '}
-				{questionInfo[result[result.length - 2].num]}은 상대적으로 덜
-				중요하게 생각합니다.
-				<article>
+				반면에{' '}
+				<span className="fw-bold">
+					{questionInfo[result[result.length - 1].num]}
+				</span>
+				,{' '}
+				<span className="fw-bold">
+					{questionInfo[result[result.length - 2].num]}
+				</span>
+				은 상대적으로 덜 중요하게 생각합니다.
+				<p className="mt-3 mb-3">
 					<Snake
-						percentageWidth={'50'}
+						percentageWidth={'65'}
 						scoreHandler={scoreHandler}
 						gameoverHandler={gameoverHandler}
 					/>
-				</article>
-				<article>
-					<br />
-					{/* 신기록: 이재근님 72점 */}
+				</p>
+				<br />
+				<p className="mt-3 fw-bold">
 					SCORE 20점 이상 달성시 결과를 확인할 수 있습니다.
-					<br />
-					<button
-						type="button"
-						className="btn btn-primary"
-						onClick={() => {
-							setCheckResult(true);
-						}}
-						disabled={score < 20}
-					>
-						결과보기
-					</button>
-				</article>
+				</p>
+				<button
+					type="button"
+					className="btn btn-lg btn-primary mb-3"
+					onClick={() => {
+						setCheckResult(true);
+					}}
+					disabled={score < 20}
+				>
+					결과보기
+				</button>
 				<div>
 					{modalRanking === true ? (
-						typeof ranking[0] === 'undefined' ? (
-							<p>Loading...</p>
-						) : (
-							ranking.map((user, index) => (
-								<Rank
-									user={user}
-									key={index}
-									index={index + 1}
-								/>
-							))
-						)
+						<>
+							<p
+								onClick={() => {
+									setModalRanking(false);
+								}}
+							>
+								랭킹닫기(클릭)
+							</p>
+							<table className="table table-bordered table-light table-striped">
+								<thead>
+									<tr>
+										<th scope="col">등수</th>
+										<th scope="col">이름</th>
+										<th scope="col">점수</th>
+									</tr>
+								</thead>
+								<tbody>
+									{ranking.map((user, index) => (
+										<Rank
+											user={user}
+											key={index}
+											index={index + 1}
+										/>
+									))}
+								</tbody>
+							</table>
+						</>
 					) : (
 						<p
 							onClick={() => {
@@ -276,19 +324,42 @@ const Result = (props) => {
 	}
 	return (
 		<div>
-			<h2>검사가 완료되었습니다.</h2>
-			<p>이름: {props.name}</p>
-			<p>성별: {props.gender === '남자' ? '남자' : '여자'}</p>
-			<p>검사일: {new Date().toLocaleString('kor').slice(0, 14)}</p>
-			<h2>1. 직업가치관 결과</h2>
+			<h2 className="mt-4">직업가치관검사 결과</h2>
+			<table className="table table-bordered table-light table-striped">
+				<thead>
+					<tr>
+						<th scope="col">이름</th>
+						<th scope="col">성별</th>
+						<th scope="col">검사일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{props.name}</td>
+						<td>{props.gender === '남자' ? '남자' : '여자'}</td>
+						<td>{new Date().toLocaleString('kor').slice(0, 14)}</td>
+					</tr>
+				</tbody>
+			</table>
+			<h2 className="mt-5">1. 직업가치관 결과</h2>
 			<p>
-				직업생활과 관련하여 {props.name}님은{' '}
-				{questionInfo[result[0].num]}(와)과{' '}
-				{questionInfo[result[1].num]}(을)를 가장 중요하게 생각합니다.
+				직업생활과 관련하여{' '}
+				<span className="fw-bold">{props.name}</span>
+				님은{' '}
+				<span className="fw-bold">{questionInfo[result[0].num]}</span>
+				(와)과{' '}
+				<span className="fw-bold">{questionInfo[result[1].num]}</span>
+				(을)를 가장 중요하게 생각합니다.
 				<br />
-				반면에 {questionInfo[result[result.length - 1].num]},{' '}
-				{questionInfo[result[result.length - 2].num]}은 상대적으로 덜
-				중요하게 생각합니다.
+				반면에{' '}
+				<span className="fw-bold">
+					{questionInfo[result[result.length - 1].num]}
+				</span>
+				,{' '}
+				<span className="fw-bold">
+					{questionInfo[result[result.length - 2].num]}
+				</span>
+				은 상대적으로 덜 중요하게 생각합니다.
 			</p>
 			<Bar
 				data={confirmedData}
@@ -299,9 +370,9 @@ const Result = (props) => {
 				}}
 			/>
 			<br />
-			<h2>2. 나의 가치관과 관련이 높은 직업</h2>
+			<h2 className="mt-2">2. 나의 가치관과 관련이 높은 직업</h2>
 			<h3>종사자 평균 학력별</h3>
-			<table className="table">
+			<table className="table table-bordered table-light table-striped">
 				<thead>
 					<tr>
 						<th scope="col">분야</th>
@@ -310,7 +381,7 @@ const Result = (props) => {
 				</thead>
 				<tbody>
 					<tr>
-						<th scope="row" style={{ minWidth: '80px' }}>
+						<th scope="row" style={{ minWidth: '90px' }}>
 							중졸이하
 						</th>
 						<td>{jobResult[1].join(' ')}</td>
@@ -335,7 +406,7 @@ const Result = (props) => {
 			</table>
 			<br />
 			<h3>종사자 평균 전공별</h3>
-			<table className="table">
+			<table className="table table-bordered table-light table-striped">
 				<thead>
 					<tr>
 						<th scope="col">분야</th>
@@ -344,7 +415,7 @@ const Result = (props) => {
 				</thead>
 				<tbody>
 					<tr>
-						<th scope="row" style={{ minWidth: '80px' }}>
+						<th scope="row" style={{ minWidth: '90px' }}>
 							계열무관
 						</th>
 						<td>{majorResult[0].join(' ')}</td>
