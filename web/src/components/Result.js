@@ -14,6 +14,7 @@ const Result = (props) => {
 	const [checkResult, setCheckResult] = useState(false);
 	const [jobResult, setJobResult] = useState();
 	const [majorResult, setMajorResult] = useState();
+	const [modalRanking, setModalRanking] = useState(false);
 	const [ranking, setRanking] = useState({});
 	const [score, setScore] = useState(0);
 	const [confirmedData, setConfirmedData] = useState({
@@ -69,7 +70,27 @@ const Result = (props) => {
 		7: '자기계발',
 		8: '창의성',
 	};
-
+	const fetchGetRank = () => {
+		fetch(
+			'http://elice-kdt-3rd-vm-102.koreacentral.cloudapp.azure.com:5000/score',
+			{
+				method: 'GET',
+				mode: 'cors',
+			},
+		)
+			.then((res) => {
+				console.log(res);
+				return res.json();
+			})
+			.then((data) => {
+				console.log(data);
+				data.sort((a, b) => {
+					return b.score - a.score;
+				});
+				setRanking(data);
+				console.log(data);
+			});
+	};
 	useEffect(() => {
 		const params = {
 			apikey: 'e772916f49d49980fd515f04c9ebc4ba',
@@ -144,25 +165,7 @@ const Result = (props) => {
 				});
 				return temp;
 			});
-			fetch(
-				'http://elice-kdt-3rd-vm-102.koreacentral.cloudapp.azure.com:5000/score',
-				{
-					method: 'GET',
-					mode: 'cors',
-				},
-			)
-				.then((res) => {
-					console.log(res);
-					return res.json();
-				})
-				.then((data) => {
-					console.log(data);
-					data.sort((a, b) => {
-						return b.score - a.score;
-					});
-					setRanking(data);
-					console.log(data);
-				});
+			fetchGetRank();
 			setLoading(true);
 		};
 		fetchEvent();
@@ -173,8 +176,8 @@ const Result = (props) => {
 	const scoreHandler = (score) => {
 		setScore(score);
 	};
-	const gameoverHandler = () => {
-		fetch(
+	const gameoverHandler = async () => {
+		await fetch(
 			'http://elice-kdt-3rd-vm-102.koreacentral.cloudapp.azure.com:5000/score',
 			{
 				method: 'POST',
@@ -188,12 +191,22 @@ const Result = (props) => {
 				},
 			},
 		);
+		await fetchGetRank();
 	};
 
 	const Rank = (props) => {
 		console.log(props.user);
 		return (
 			<>
+				{props.index === 1 && (
+					<p
+						onClick={() => {
+							setModalRanking(false);
+						}}
+					>
+						랭킹닫기(클릭)
+					</p>
+				)}
 				<ol>
 					{props.index}등 {props.user.name}님 {props.user.score}점
 				</ol>
@@ -236,12 +249,26 @@ const Result = (props) => {
 					</button>
 				</article>
 				<div>
-					{typeof ranking[0] === 'undefined' ? (
-						<p>Loading...</p>
+					{modalRanking === true ? (
+						typeof ranking[0] === 'undefined' ? (
+							<p>Loading...</p>
+						) : (
+							ranking.map((user, index) => (
+								<Rank
+									user={user}
+									key={index}
+									index={index + 1}
+								/>
+							))
+						)
 					) : (
-						ranking.map((user, index) => (
-							<Rank user={user} key={index} index={index + 1} />
-						))
+						<p
+							onClick={() => {
+								setModalRanking(true);
+							}}
+						>
+							랭킹확인(클릭)
+						</p>
 					)}
 				</div>
 			</div>
