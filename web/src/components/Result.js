@@ -14,6 +14,7 @@ const Result = (props) => {
 	const [checkResult, setCheckResult] = useState(false);
 	const [jobResult, setJobResult] = useState();
 	const [majorResult, setMajorResult] = useState();
+	const [ranking, setRanking] = useState({});
 	const [score, setScore] = useState(0);
 	const [confirmedData, setConfirmedData] = useState({
 		labels: [
@@ -119,7 +120,7 @@ const Result = (props) => {
 			);
 			setJobResult(() => {
 				const temp = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-				job_result.data.forEach((a, b, c) => {
+				job_result.data.forEach((a) => {
 					temp[a[2]].push(a[1]);
 				});
 				return temp;
@@ -135,7 +136,7 @@ const Result = (props) => {
 					6: [],
 					7: [],
 				};
-				major_result.data.forEach((a, b, c) => {
+				major_result.data.forEach((a) => {
 					if (a[2] !== 0) {
 						temp[0].push(a[1]);
 					}
@@ -143,6 +144,15 @@ const Result = (props) => {
 				});
 				return temp;
 			});
+			fetch('/score')
+				.then((res) => res.json())
+				.then((data) => {
+					data.sort((a, b) => {
+						return b.score - a.score;
+					});
+					setRanking(data);
+					console.log(data);
+				});
 			setLoading(true);
 		};
 		fetchEvent();
@@ -153,6 +163,30 @@ const Result = (props) => {
 	const scoreHandler = (score) => {
 		setScore(score);
 	};
+	const gameoverHandler = () => {
+		fetch('/score', {
+			method: 'POST',
+			body: JSON.stringify({
+				name: props.name === '' ? 'guest' : props.name,
+				score: score,
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+	};
+
+	const Rank = (props) => {
+		console.log(props.user);
+		return (
+			<>
+				<ol>
+					{props.index}등 {props.user.name}님 {props.user.score}점
+				</ol>
+			</>
+		);
+	};
+
 	if (!checkResult) {
 		return (
 			<div>
@@ -165,10 +199,15 @@ const Result = (props) => {
 				{questionInfo[result[result.length - 2].num]}은 상대적으로 덜
 				중요하게 생각합니다.
 				<article>
-					<Snake percentageWidth={'50'} scoreHandler={scoreHandler} />
+					<Snake
+						percentageWidth={'50'}
+						scoreHandler={scoreHandler}
+						gameoverHandler={gameoverHandler}
+					/>
 				</article>
 				<article>
 					<br />
+					{/* 신기록: 이재근님 72점 */}
 					SCORE 20점 이상 달성시 결과를 확인할 수 있습니다.
 					<br />
 					<button
@@ -182,10 +221,18 @@ const Result = (props) => {
 						결과보기
 					</button>
 				</article>
+				<div>
+					{typeof ranking[0] === 'undefined' ? (
+						<p>Loading...</p>
+					) : (
+						ranking.map((user, index) => (
+							<Rank user={user} key={index} index={index + 1} />
+						))
+					)}
+				</div>
 			</div>
 		);
 	}
-
 	return (
 		<div>
 			<h2>검사가 완료되었습니다.</h2>
