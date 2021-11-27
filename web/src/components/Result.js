@@ -4,6 +4,7 @@ import { Bar } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import { CategoryScale } from 'chart.js';
 import { useHistory } from 'react-router-dom';
+import Snake from 'react-simple-snake';
 
 Chart.register(CategoryScale);
 
@@ -13,6 +14,7 @@ const Result = (props) => {
 	const [checkResult, setCheckResult] = useState(false);
 	const [jobResult, setJobResult] = useState();
 	const [majorResult, setMajorResult] = useState();
+	const [score, setScore] = useState(0);
 	const [confirmedData, setConfirmedData] = useState({
 		labels: [
 			'능력발휘',
@@ -148,6 +150,9 @@ const Result = (props) => {
 
 	if (!loading) return <div>Loading...</div>;
 
+	const scoreHandler = (score) => {
+		setScore(score);
+	};
 	if (!checkResult) {
 		return (
 			<div>
@@ -159,17 +164,24 @@ const Result = (props) => {
 				반면에 {questionInfo[result[result.length - 1].num]},{' '}
 				{questionInfo[result[result.length - 2].num]}은 상대적으로 덜
 				중요하게 생각합니다.
-				<p>
+				<article>
+					<Snake percentageWidth={'50'} scoreHandler={scoreHandler} />
+				</article>
+				<article>
+					<br />
+					SCORE 20점 이상 달성시 결과를 확인할 수 있습니다.
+					<br />
 					<button
 						type="button"
 						className="btn btn-primary"
 						onClick={() => {
 							setCheckResult(true);
 						}}
+						disabled={score < 20}
 					>
 						결과보기
 					</button>
-				</p>
+				</article>
 			</div>
 		);
 	}
@@ -179,7 +191,7 @@ const Result = (props) => {
 			<h2>검사가 완료되었습니다.</h2>
 			<p>이름: {props.name}</p>
 			<p>성별: {props.gender === '남자' ? '남자' : '여자'}</p>
-			<p>검사일: {new Date().toLocaleString('kor').split('오전')[0]}</p>
+			<p>검사일: {new Date().toLocaleString('kor').slice(0, 14)}</p>
 			<h2>1. 직업가치관 결과</h2>
 			<p>
 				직업생활과 관련하여 {props.name}님은{' '}
