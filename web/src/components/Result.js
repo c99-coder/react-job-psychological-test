@@ -194,39 +194,6 @@ const Result = (props) => {
 		await fetchGetRank();
 	};
 
-	<table>
-		<thead>
-			<tr>
-				<th scope="col">분야</th>
-				<th scope="col">직업명</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th scope="row" style={{ minWidth: '80px' }}>
-					중졸이하
-				</th>
-				<td>{jobResult[1].join(' ')}</td>
-			</tr>
-			<tr>
-				<th scope="row">고졸</th>
-				<td>{jobResult[2].join(' ')}</td>
-			</tr>
-			<tr>
-				<th scope="row">전문대졸</th>
-				<td>{jobResult[3].join(' ')}</td>
-			</tr>
-			<tr>
-				<th scope="row">대졸</th>
-				<td>{jobResult[4].join(' ')}</td>
-			</tr>
-			<tr>
-				<th scope="row">대학원졸</th>
-				<td>{jobResult[5].join(' ')}</td>
-			</tr>
-		</tbody>
-	</table>;
-
 	const Rank = (props) => {
 		console.log(props.user);
 		return (
@@ -284,6 +251,7 @@ const Result = (props) => {
 					{modalRanking === true ? (
 						<>
 							<p
+								className="fs-4 fw-bold"
 								onClick={() => {
 									setModalRanking(false);
 								}}
@@ -311,6 +279,7 @@ const Result = (props) => {
 						</>
 					) : (
 						<p
+							className="fs-4 fw-bold"
 							onClick={() => {
 								setModalRanking(true);
 							}}
