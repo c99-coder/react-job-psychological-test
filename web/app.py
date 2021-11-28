@@ -34,22 +34,23 @@ def scores():
             db.commit()
         
         if request.method == 'GET':
-                sql = "SELECT * FROM score"
-                cursor.execute(sql)
-                scores = cursor.fetchall()
-                output = []
-                for score in scores:
-                    output.append({'name':score['name'], 'score':score['score']})
-                resp.set_data(json.dumps(output))
-                return resp
+            sql = "SELECT * FROM score"
+            cursor.execute(sql)
+            scores = cursor.fetchall()
+            output = []
+            for score in scores:
+                output.append({'name':score['name'], 'score':score['score']})
+            resp.set_data(json.dumps(output))
+            return resp
         elif request.method == 'POST':
             form = request.get_json()
             sql = "SELECT * FROM score WHERE name='%(name)s'" % {'name':form['name']}
             cursor.execute(sql)
             target=cursor.fetchall()
             if target:
-                sql = """
-                UPDATE score SET score=%(score)s where name='%(name)s'""" % {'name':form['name'], 'score':form['score']}
+                if target[0]['score'] < form['score']:
+                    sql = """
+                    UPDATE score SET score=%(score)s where name='%(name)s'""" % {'name':form['name'], 'score':form['score']}
             else:
                 sql = """
                     INSERT INTO score (name, score) 
